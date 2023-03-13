@@ -21,9 +21,18 @@ namespace КГ_Лаб1_Фильтры
 					return null;
 
 				for (int j = 0; j < sourceImage.Height; j++)
-				{
 					resultImage.SetPixel(i, j, calculateNewPixelColor(sourceImage,i, j));
-				}
+			}
+			return resultImage;
+		}
+
+		public Bitmap processImage(Bitmap sourceImage)
+		{
+			Bitmap resultImage = new Bitmap(sourceImage.Width, sourceImage.Height);
+			for (int i = 0; i < sourceImage.Width; i++)
+			{
+				for (int j = 0; j < sourceImage.Height; j++)
+					resultImage.SetPixel(i, j, calculateNewPixelColor(sourceImage, i, j));
 			}
 			return resultImage;
 		}
