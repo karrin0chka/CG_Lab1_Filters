@@ -82,7 +82,6 @@
     <Compile Include="Sepia.cs" />
     <Compile Include="Sharpness.cs" />
     <Compile Include="SobelOperator.cs" />
-    <Compile Include="TopHat.cs" />
     <Compile Include="Transfer.cs" />
     <Compile Include="Waves.cs" />
     <Compile Include="Сlosing.cs" />
