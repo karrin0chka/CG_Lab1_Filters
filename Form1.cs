@@ -12,8 +12,7 @@ using System.Windows.Forms;
 namespace КГ_Лаб1_Фильтры
 {
 	public partial class Form1 : Form
-	{
-		
+	{	
 		Bitmap image;
 		public Form1()
 		{
@@ -161,7 +160,6 @@ namespace КГ_Лаб1_Фильтры
         {
 			Filters filter = new Embossing();
 			backgroundWorker1.RunWorkerAsync(filter);
-
 		}
 
         private void выделениеГраницToolStripMenuItem_Click(object sender, EventArgs e)
@@ -196,10 +194,14 @@ namespace КГ_Лаб1_Фильтры
 
         private void светящиесяКраяToolStripMenuItem_Click(object sender, EventArgs e)
         {
-			Filters filter = new GlowingEdges(image);
-			MedianFilter median = new MedianFilter();
+			Filters filter = new MedianFilter();
+			image = ((MedianFilter)filter).processImage(image);
+			filter = new Borders();
+			image = ((Borders)filter).processImage(image);
+			filter = new MaxFilter();
+			image = ((MaxFilter)filter).processImage(image);
 			backgroundWorker1.RunWorkerAsync(filter);
-			
+
 		}
 
         private void волныToolStripMenuItem_Click(object sender, EventArgs e)
@@ -216,14 +218,70 @@ namespace КГ_Лаб1_Фильтры
 
         private void закрытиеToolStripMenuItem_Click(object sender, EventArgs e)
         {
-			Filters filter = new Closing();
+			Filters filter = new Extension();
+			image = ((Extension)filter).processImage(image);
+			filter = new Narrowing();
+			image = ((Narrowing)filter).processImage(image);
 			backgroundWorker1.RunWorkerAsync(filter);
 		}
 
         private void открытиеToolStripMenuItem_Click(object sender, EventArgs e)
         {
-			Filters filter = new Opening();
+            Filters filter = new Narrowing();
+			image = ((Narrowing)filter).processImage(image);
+			filter = new Extension();
+			image = ((Extension)filter).processImage(image);
 			backgroundWorker1.RunWorkerAsync(filter);
 		}
-    }
+
+        private void topHatToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			float[,] kern = new float[,] { { 0, 1, 0 }, { 1, 1, 1 }, { 0, 1, 0 } };
+			Filters filter = new Narrowing();
+			((Narrowing)filter).setStructElem(kern);
+
+			Bitmap image1 = ((Narrowing)filter).processImage(image);
+
+			filter = new Extension();
+			((Extension)filter).setStructElem(kern);
+			Bitmap image2 = ((Extension)filter).processImage(image1);
+			filter = new Grad();
+			image = ((Grad)filter).processImageGrad(image2, image1);
+			pictureBox1.Image = image;
+			pictureBox1.Refresh();
+		}
+
+        private void blackHatToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			float[,] kern = new float[,] { { 0, 1, 0 }, { 1, 1, 1 }, { 0, 1, 0 } };
+			Filters filter = new Extension();
+			((Extension)filter).setStructElem(kern);
+
+			Bitmap image1 = ((Extension)filter).processImage(image);
+			filter = new Narrowing();
+			((Narrowing)filter).setStructElem(kern);
+			image1 = ((Narrowing)filter).processImage(image1);
+			filter = new Grad();
+			image = ((Grad)filter).processImageGrad(image1, image);
+			pictureBox1.Image = image;
+			pictureBox1.Refresh();
+		}
+
+        private void gradToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			float[,] kern = new float[,] { { 0, 1, 0 }, { 1, 1, 1 }, { 0, 1, 0 } };
+			Filters filter = new Extension();
+			((Extension)filter).setStructElem(kern);
+			Bitmap image1 = ((Extension)filter).processImage(image);
+			filter = new Narrowing();
+			((Narrowing)filter).setStructElem(kern);
+			Bitmap image2 = ((Narrowing)filter).processImage(image);
+
+			filter = new Grad();
+			image = ((Grad)filter).processImageGrad(image1, image2);
+			pictureBox1.Image = image;
+			pictureBox1.Refresh();
+
+		}
+	}
 }
