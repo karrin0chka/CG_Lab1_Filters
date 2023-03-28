@@ -7,22 +7,33 @@ using System.Threading.Tasks;
 
 namespace КГ_Лаб1_Фильтры
 {
-    class Glass : Filters
+    class Glass : MatrixFilter
     {
+        Random rand = new Random();
+        
         protected override Color calculateNewPixelColor(Bitmap sourceImage, int x, int y)
         {
-            Color sourseColor = sourceImage.GetPixel(x, y);
-            Random random = new Random();
-            double r1 = random.NextDouble();
-            double r2 = random.NextDouble();
-            int newX = (int)(x + (r1 - 0.5) * 10);
-            int newY = (int)(y + (r2 - 0.5) * 10);
-            if (newX > 0 && newX < sourceImage.Width && newY > 0 && newY < sourceImage.Height)
-            {
-                sourseColor = sourceImage.GetPixel(newX, newY);
-            }
+            float resultR1 = 0;
+            float resultG1 = 0;
+            float resultB1 = 0;
 
-            return Color.FromArgb(sourseColor.R, sourseColor.G, sourseColor.B);
+            kegel = new float[3, 3] { { 0, 0, 0 }, { 0, 1, 0 }, { 0, 0, 0 } };
+            int radiusX = kegel.GetLength(0) / 2;
+            int radiusY = kegel.GetLength(1) / 2;
+
+            for (int l = -radiusY; l <= radiusY; l++)
+                for (int k = -radiusX; k <= radiusX; k++)
+                {
+                    int idX = Clamp((int)(x + 10 * (rand.NextDouble() - 0.5)), 0, sourceImage.Width - 1); //пиксели - соседи
+                    int idY = Clamp((int)(y + 10 * (rand.NextDouble() - 0.5)), 0, sourceImage.Height - 1);
+                    Color neighborColor = sourceImage.GetPixel(idX, idY);
+                    resultR1 += neighborColor.R * kegel[k + radiusX, l + radiusY];
+                    resultG1 += neighborColor.G * kegel[k + radiusX, l + radiusY];
+                    resultB1 += neighborColor.B * kegel[k + radiusX, l + radiusY];
+                }
+            return Color.FromArgb(Clamp((int)resultR1, 0, 255),
+            Clamp((int)resultG1, 0, 255),
+            Clamp((int)resultB1, 0, 255));
         }
     }
 }

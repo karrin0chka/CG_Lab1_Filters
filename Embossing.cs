@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace КГ_Лаб1_Фильтры
 {
-    class Embossing : Filters //тиснение - не работает
+    class Embossing : Filters //тиснение
     {
         protected float[,] kernel = new float[3, 3]{{0, 1,  0},
                                     { 1, 0, -1},

@@ -23,6 +23,11 @@ namespace КГ_Лаб1_Фильтры
             this.kegelY = kegelY;
         }
 
+        public void setStructElem(float[,] struct_elem)
+        {
+            kegel = struct_elem;
+        }
+
         protected override Color calculateNewPixelColor(Bitmap sourceImage, int x, int y)
         {
             float resultR = 0;
